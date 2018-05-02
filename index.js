@@ -7,22 +7,28 @@ function getIssues() {
       Authorization: `token ${getToken()}`
     }
   }).then(res => showIssues(res.json()));
-
 }
 
-function showIssues(json="") {
-  console.log(json);
-  document.getElementsByClassName('issues').innerHTML+=json;
+function showIssues(json) {
+  var content = "";
+  json.then(res=>res.forEach(issue=>{
+    content += `${issue.title}<br>${issue.body}<br>`;
+    document.getElementById('issues').innerHTML+=content;
+    // console.log('then',issue.title);
+    })
+  );
 }
+
+getIssues();
 
 function createIssue() {
 const postData = {
-  body: document.getElementById('title').value + document.getElementById('body').value
+  title: document.getElementById('title').value, body: document.getElementById('body').value
 };
   fetch('https://api.github.com/repos/azeelleeza/javascript-fetch-lab/issues', {
     method: 'post',
-    // body: JSON.stringify(postData),
-    body: document.getElementById('title').value + document.getElementById('body').value,
+    body: JSON.stringify(postData),
+    // body: document.getElementById('title').value + document.getElementById('body').value,
     headers: {
       Authorization: `token ${getToken()}`
     }
@@ -41,7 +47,7 @@ function forkRepo() {
     headers: {
       Authorization: `token ${getToken()}`
     }
-  }).then(res=>res.json()).then(res => console.log(res)).then(res => showResults(res));
+  }).then(res=>res.json()).then(res => showResults(res));
 
 }
 
